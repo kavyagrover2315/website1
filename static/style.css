@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, plum, lightpink);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-container {
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  z-index: 1;
+}
+
+h1 {
+  font-size: 2.4rem;
+  color: black;
+  margin-bottom: 2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+input {
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  border-radius: 25px;
+  border: 1px solid gray;
+  background-color: thistle;
+  color: black;
+}
+
+input::placeholder {
+  color: dimgray;
+  font-size: 1rem;
+}
+
+.submit-btn {
+  background: none;
+  border: none;
+  align-self: flex-end;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.arrow {
+  font-size: 2.5rem;
+  color: brown;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.arrow:hover {
+  transform: translateX(4px);
+}
+
+/* Floating Emojis */
+.emoji-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.emoji {
+  position: absolute;
+  font-size: 1.8rem;
+  animation: floatUp 10s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Responsive Tweaks */
+@media (max-width: 400px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .arrow {
+    font-size: 2rem;
+  }
+
+  input {
+    font-size: 1rem;
+  }
+
+  .emoji {
+    font-size: 1.6rem;
+  }
+}
+
+.highlight {
+  color: brown;
+  font-size: 2.2rem;
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+
+.sub-highlight {
+  color: black;
+  font-size: 2rem;
+  display: inline-block;
+  letter-spacing: 1px;
+}
