@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+</head>
+<body>
+  <div class="form-container">
+    <h1><span class="highlight">Create</span> Your<br><span class="sub-highlight">Account</span></h1>
+    <form id="registerForm" action="/register" method="POST">
+      <input type="text" name="full_name" placeholder="👤 Full Name" required>
+      <input type="number" name="age" placeholder="🎂 Age" required>
+      <input type="text" name="username" placeholder="🆔 Username" required>
+      <input type="password" name="password" placeholder="🔐 Password (min 8 chars)" required>
+      
+      <button class="submit-btn" type="submit">
+        <span class="arrow">➜</span>
+      </button>
+    </form>
+
+    <div id="response" style="color: green; margin-top: 15px;"></div>
+  </div>
+
+  <div class="emoji-container">
+    <div class="emoji" style="left: 5%; animation-delay: 0s;">😊</div>
+    <div class="emoji" style="left: 12%; animation-delay: 1s;">❤️</div>
+    <div class="emoji" style="left: 18%; animation-delay: 2.5s;">🌟</div>
+    <div class="emoji" style="left: 25%; animation-delay: 0.8s;">💖</div>
+    <div class="emoji" style="left: 33%; animation-delay: 3.5s;">😁</div>
+    <div class="emoji" style="left: 41%; animation-delay: 1.5s;">🥰</div>
+    <div class="emoji" style="left: 50%; animation-delay: 4s;">🎉</div>
+    <div class="emoji" style="left: 60%; animation-delay: 0.6s;">😎</div>
+    <div class="emoji" style="left: 70%; animation-delay: 2.2s;">🦋</div>
+    <div class="emoji" style="left: 80%; animation-delay: 3s;">💫</div>
+    <div class="emoji" style="left: 90%; animation-delay: 1.2s;">🤗</div>
+  </div>
+
+  <script>
+  const form = document.getElementById('registerForm');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const responseDiv = document.getElementById('response');
+
+    try {
+      const res = await fetch('/register', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await res.json();
+      
+      if (res.ok) {
+        // Show both success message and sweet welcome
+        responseDiv.innerHTML = `
+          ✅ ${result.message}<br><br>
+          <em style="color: #444;">${result.welcome}</em>
+        `;
+        responseDiv.style.color = 'green';
+      } else {
+        responseDiv.innerText = result.error || 'Something went wrong.';
+        responseDiv.style.color = 'red';
+      }
+
+    } catch (err) {
+      responseDiv.innerText = '⚠️ Failed to connect to server.';
+      responseDiv.style.color = 'red';
+    }
+  });
+</script>
+</body>
+</html>
