@@ -1,15 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Account</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
+  <style>
+    :root {
+      --bg-light: linear-gradient(135deg, #ffeaf4, #fff2f8);
+      --bg-dark: #1a1a1a;
+      --text-light: #c71585;
+      --text-dark: #f9c5d1;
+      --box-bg-light: #ffffff;
+      --box-bg-dark: #2c2c2c;
+    }
 
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: all 0.4s ease;
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .form-container {
+      text-align: center;
+      padding: 40px;
+      max-width: 400px;
+      margin: 100px auto;
+      background: var(--box-bg-light);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: background 0.4s ease;
+    }
+
+    body.dark .form-container {
+      background: var(--box-bg-dark);
+    }
+
+    .highlight {
+      color: #ff69b4;
+      font-weight: bold;
+    }
+
+    .sub-highlight {
+      color: #ffb6c1;
+    }
+
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .submit-btn {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .submit-btn:hover {
+      background: #ff4da6;
+    }
+
+    /* 🌸 Emoji float animation */
+    .emoji-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 24px;
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        top: 100%;
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        top: -10%;
+        opacity: 0;
+        transform: translateY(-100px) rotate(360deg);
+      }
+    }
+
+    /* 🌟 Welcome message */
+    .welcome-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #ffe6f0;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      font-size: 18px;
+      color: #c71585;
+      font-family: 'Segoe UI', sans-serif;
+      animation: fadeInPop 1s ease;
+      z-index: 999;
+      display: none;
+    }
+
+    @keyframes fadeInPop {
+      0% { opacity: 0; transform: translate(-50%, -60%) scale(0.9); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* 🌙 Dark mode toggle */
+    .toggle-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .toggle-switch {
+      background: #fff0f5;
+      border: 2px solid #ffb6c1;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #d63384;
+      transition: all 0.3s ease;
+    }
+
+    body.dark .toggle-switch {
+      background: #2c2c2c;
+      border-color: #888;
+      color: #f9c5d1;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- 🌙 Toggle Button -->
+  <div class="toggle-container">
+    <button class="toggle-switch" onclick="toggleDarkMode()">🌞 Light / 🌙 Dark</button>
+  </div>
+
+  <!-- 💖 Registration Form -->
   <div class="form-container">
     <h1><span class="highlight">Create</span> Your<br><span class="sub-highlight">Account</span></h1>
     <form id="registerForm" action="/register" method="POST">
@@ -17,15 +173,14 @@
       <input type="number" name="age" placeholder="🎂 Age" required>
       <input type="text" name="username" placeholder="🆔 Username" required>
       <input type="password" name="password" placeholder="🔐 Password (min 8 chars)" required>
-      
-      <button class="submit-btn" type="submit">
-        <span class="arrow">➜</span>
-      </button>
+      <button class="submit-btn" type="submit"><span class="arrow">➜</span></button>
     </form>
-
-    <div id="response" style="color: green; margin-top: 15px;"></div>
   </div>
 
+  <!-- 🌸 Welcome Message -->
+  <div id="response" class="welcome-container"></div>
+
+  <!-- 🎉 Floating Emojis -->
   <div class="emoji-container">
     <div class="emoji" style="left: 5%; animation-delay: 0s;">😊</div>
     <div class="emoji" style="left: 12%; animation-delay: 1s;">❤️</div>
@@ -40,38 +195,50 @@
     <div class="emoji" style="left: 90%; animation-delay: 1.2s;">🤗</div>
   </div>
 
+  <!-- 🧠 Script -->
   <script>
-  const form = document.getElementById('registerForm');
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const formData = new FormData(form);
+    const form = document.getElementById('registerForm');
     const responseDiv = document.getElementById('response');
 
-    try {
-      const res = await fetch('/register', {
-        method: 'POST',
-        body: formData
-      });
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(form);
 
-      const result = await res.json();
-      
-      if (res.ok) {
-        // Show both success message and sweet welcome
-        responseDiv.innerHTML = `
-          ✅ ${result.message}<br><br>
-          <em style="color: #444;">${result.welcome}</em>
-        `;
-        responseDiv.style.color = 'green';
-      } else {
-        responseDiv.innerText = result.error || 'Something went wrong.';
-        responseDiv.style.color = 'red';
+      try {
+        const res = await fetch('/register', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          responseDiv.innerHTML = `
+            <div>
+              <div style="font-size: 22px;">🌸 ${result.message}</div>
+              <div style="margin-top: 10px;">${result.welcome}</div>
+            </div>
+          `;
+          responseDiv.style.display = "block";
+
+          setTimeout(() => {
+            window.location.href = "/mood";
+          }, 2500);
+        } else {
+          responseDiv.innerHTML = `<p style="color:red;">${result.error || 'Something went wrong.'}</p>`;
+          responseDiv.style.display = "block";
+        }
+
+      } catch (err) {
+        responseDiv.innerHTML = `<p style="color:red;">⚠️ Failed to connect to server.</p>`;
+        responseDiv.style.display = "block";
       }
+    });
 
-    } catch (err) {
-      responseDiv.innerText = '⚠️ Failed to connect to server.';
-      responseDiv.style.color = 'red';
+    // 🌙 Toggle Dark Mode
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
     }
-  });
-</script>
+  </script>
 </body>
 </html>
