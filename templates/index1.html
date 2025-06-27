@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mood Predictor App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe0ec, #fddde6);
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+    }
+
+    h1 {
+      color: #c2185b;
+      font-size: 38px;
+    }
+
+    form {
+      margin-top: 30px;
+    }
+
+    input[type="text"] {
+      padding: 14px;
+      width: 60%;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 1px solid #f8bbd0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #ec407a;
+      box-shadow: 0 4px 12px rgba(236, 64, 122, 0.4);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 14px 30px;
+      font-size: 18px;
+      background: #ec407a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #d81b60;
+    }
+
+    .result-section {
+      margin-top: 50px;
+      padding: 30px;
+      animation: fadeIn 1s ease-in-out;
+      border-radius: 12px;
+      background: #fff0f5;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .columns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+      gap: 30px;
+    }
+
+    .column {
+      flex: 1;
+      min-width: 280px;
+      padding: 20px;
+      background: #fff7fb;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.4s ease;
+      position: relative;
+    }
+
+    .column:hover {
+      transform: scale(1.05);
+    }
+
+    a {
+      color: #e91e63;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .playlist-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #f06292;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .playlist-btn:hover {
+      background-color: #d81b60;
+    }
+
+    .emoji-icon {
+      font-size: 36px;
+    }
+
+    .sparkle {
+      animation: sparkle 2s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(5deg) scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌸 How are you feeling today?</h1>
+
+ 
+
+  <form method="POST">
+    <input type="text" name="text" placeholder="Type something like 'I'm feeling low today'" required />
+    <br />
+    <button type="submit">✨ Detect Mood</button>
+  </form>
+
+  {% if mood %}
+  <div class="result-section">
+    <h2 class="sparkle">🎯 Detected Mood: {{ mood|capitalize }} <span class="emoji-icon">{{ emoji }}</span></h2>
+    <p><strong>🩷 Tip:</strong> {{ tip }}</p>
+
+    <div class="columns">
+      <div class="column">
+        <h3>🤖 AI Suggestion</h3>
+        <p>{{ ai_suggestion }}</p>
+      </div>
+      <div class="column">
+        <h3>🎵 Playlist</h3>
+        {% if playlist_url %}
+          <p><a href="{{ playlist_url }}" target="_blank">💿 Open Spotify Playlist</a></p>
+        {% endif %}
+        <a class="playlist-btn" href="/create_playlist/{{ mood }}">➕ Create Mood Playlist</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</body>
+</html>
