@@ -1,2 +1,8 @@
 flask
 gunicorn
+Flask
+pandas
+scikit-learn
+torch
+spotipy
+transformers
